@@ -6,9 +6,12 @@ model User {
   role      Role
   createdAt DateTime @default(now())
 
-  doctorId  String?  @unique
-  doctor    Doctor?  @relation(fields: [doctorId], references: [id])
+  doctor Doctor? @relation("UserDoctor")
 
-  patientId String?  @unique
-  patient   Patient? @relation(fields: [patientId], references: [id])
+
+  patient Patient? @relation("UserPatient")
+
+  // Recetas que este usuario ha redactado como doctor
+  prescriptionsAuthored Prescription[] @relation("AuthoredByUser")
+
 }

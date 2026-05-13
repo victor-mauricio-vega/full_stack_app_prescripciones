@@ -1,10 +1,12 @@
 model PrescriptionItem {
-  id             String   @id @default(cuid())
-  medication     String
-  dosage         String
-  frequency      String
-  createdAt      DateTime @default(now())
+   id String @id @default(cuid())
 
+  // Receta a la que pertenece este ítem
+  prescription   Prescription @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
   prescriptionId String
-  prescription   Prescription @relation(fields: [prescriptionId], references: [id])
+
+  name         String  // Nombre del producto digitado manualmente
+  dosage       String? // Ej: "500 mg"
+  quantity     Int?    // Unidades indicadas
+  instructions String? // Ej: "Tomar 1 cada 8 horas con comida"
 }

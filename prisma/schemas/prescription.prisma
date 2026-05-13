@@ -6,11 +6,25 @@ model Prescription {
   createdAt  DateTime           @default(now())
   consumedAt DateTime?
 
-  patientId String
+   // Paciente al que va dirigida la receta
   patient   Patient @relation(fields: [patientId], references: [id])
+  patientId String
 
+  // Doctor autor (perfil médico)
+  author   Doctor @relation("AuthoredByDoctor", fields: [authorId], references: [id])
   authorId String
-  author   Doctor  @relation("AuthoredBy", fields: [authorId], references: [id])
 
+  // Usuario que la creó (cuenta de acceso; útil para auditoría)
+  authorUser   User   @relation("AuthoredByUser", fields: [authorUserId], references: [id])
+  authorUserId String
+
+  // Lista de medicamentos incluidos en la receta
   items PrescriptionItem[]
+
+  // Búsquedas frecuentes por estado + fecha (ej: recetas pendientes recientes)
+  @@index([status, createdAt])
+  // Filtrar todas las recetas de un paciente concreto
+  @@index([patientId])
+  // Filtrar todas las recetas emitidas por un doctor concreto
+  @@index([authorId])
 }

@@ -1,0 +1,16 @@
+model Prescription {
+  id         String             @id @default(cuid())
+  code       String             @unique
+  status     PrescriptionStatus @default(pending)
+  notes      String?
+  createdAt  DateTime           @default(now())
+  consumedAt DateTime?
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id])
+
+  authorId String
+  author   Doctor  @relation("AuthoredBy", fields: [authorId], references: [id])
+
+  items PrescriptionItem[]
+}

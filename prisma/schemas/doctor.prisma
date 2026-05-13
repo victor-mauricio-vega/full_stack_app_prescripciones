@@ -1,0 +1,10 @@
+model Doctor {
+  id            String   @id @default(cuid())
+  licenseNumber String   @unique
+  specialty     String
+  createdAt     DateTime @default(now())
+
+  user          User?                          // ← sin fields/references, es el lado inverso
+
+  prescriptions Prescription[] @relation("AuthoredBy")
+}

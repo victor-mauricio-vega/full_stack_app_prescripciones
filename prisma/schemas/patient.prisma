@@ -1,0 +1,10 @@
+model Patient {
+  id          String   @id @default(cuid())
+  dateOfBirth DateTime
+  phone       String?
+  createdAt   DateTime @default(now())
+
+  user          User?       
+
+  prescriptions Prescription[]
+}

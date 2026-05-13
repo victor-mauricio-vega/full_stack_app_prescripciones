@@ -1,0 +1,10 @@
+model PrescriptionItem {
+  id             String   @id @default(cuid())
+  medication     String
+  dosage         String
+  frequency      String
+  createdAt      DateTime @default(now())
+
+  prescriptionId String
+  prescription   Prescription @relation(fields: [prescriptionId], references: [id])
+}

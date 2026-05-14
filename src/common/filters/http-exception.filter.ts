@@ -30,7 +30,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     let message: string | string[] = 'Internal server error';
 
-    let error = 'Internal Server Error';
+    let error = status >= 500 ? 'Internal Server Error' : 'Error';
 
     if (exception instanceof HttpException) {
       const exceptionResponse = exception.getResponse();
@@ -47,7 +47,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         };
 
         message = responseObj.message ?? message;
-        error = responseObj.error ?? error;
+        error = responseObj.error ?? exception.name ?? error;
       }
     }
 
@@ -101,6 +101,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     Method: ${request.method}
     Path: ${request.url}
     StatusCode: ${status}
+    IP: ${request.ip}
+    UserAgent: ${request.headers['user-agent']}
     Message: ${JSON.stringify(message)}
     `;
 
@@ -111,6 +113,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
     logMessage += '\n--------------------------------------------------\n';
 
     fs.appendFileSync(logFile, logMessage);
+
+    if (status >= 500) {
+      this.logger.error(logMessage);
+    } else if (status >= 400) {
+      this.logger.warn(logMessage);
+    } else {
+      this.logger.log(logMessage);
+    }
   }
 
   private getLogLevel(status: number): string {

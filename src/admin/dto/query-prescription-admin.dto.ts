@@ -9,7 +9,7 @@ import {
 import { Type } from 'class-transformer';
 import { PrescriptionStatus } from '@prisma/client';
 
-export class QueryPrescriptionDto {
+export class QueryPrescriptionAdminDto {
   @IsOptional()
   @IsEnum(PrescriptionStatus)
   status?: PrescriptionStatus;

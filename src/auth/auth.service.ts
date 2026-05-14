@@ -49,6 +49,7 @@ export class AuthService {
 
       return { user: safeUser, ...tokens };
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       throw new HttpException(
         { messgae: `errror en en servidor ${error}` },
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -66,6 +67,7 @@ export class AuthService {
 
       return await this.generateTokens(newPayload);
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       throw new HttpException(
         { message: `Error al refrescar token: ${error}` },
         HttpStatus.INTERNAL_SERVER_ERROR,

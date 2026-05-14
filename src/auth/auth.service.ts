@@ -1,26 +1,91 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { RegisterDto } from './dto/register.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { LoginAuthDto } from './dto/loginAuth.dto';
+import { Role } from '../generated/prisma/enums';
+import { PayloadToken } from './model/payload.model';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
+  async registerAuth(dto: RegisterDto) {
+    try {
+      const { email, password, name } = dto;
+      const exists = await this.prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (exists) {
+        throw new HttpException(
+          { message: 'El Email ya esta registrado' },
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      const hashed = await bcrypt.hash(password, 10);
+
+      const data = {
+        email,
+        password: hashed,
+        name,
+        role: Role.patient,
+      };
+      const user = await this.prisma.user.create({ data });
+
+      const message = `usuario creado exitosamente ${user.name}`;
+
+      return message;
+    } catch (error) {
+      throw new HttpException(
+        { messgae: `errror en en servidor ${error}` },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async loginAuth(loginDto: LoginAuthDto) {
+    try {
+      const { email, password } = loginDto;
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+      const user = await this.prisma.user.findUnique({
+        where: { email },
+        include: { doctor: true, patient: true },
+      });
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+      if (!user) {
+        throw new HttpException(
+          { message: 'Correo o contraseña son incorrectos' },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const checkPass = await bcrypt.compare(password, user.password);
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+      if (!checkPass) {
+        throw new HttpException(
+          { message: 'Correo o contraseña son incorrectos' },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const payload: PayloadToken = {
+        sub: user.id,
+        role: user.role,
+      };
+      const accessToken = this.jwtService.sign(payload);
+
+      const { password: _, email: __, ...safeUser } = user;
+
+      return { user: safeUser, accessToken };
+    } catch (error) {
+      throw new HttpException(
+        { messgae: `errror en en servidor ${error}` },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

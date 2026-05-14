@@ -4,7 +4,7 @@ import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { PrismaService } from '../prisma/prisma.service';
 
 import * as bcrypt from 'bcrypt';
-import { Role } from '../generated/prisma/enums';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class DoctorService {
@@ -58,9 +58,9 @@ export class DoctorService {
     return `This action returns a #${id} doctor`;
   }
 
-  update(id: number, updateDoctorDto: UpdateDoctorDto) {
-    return `This action updates a #${id}  doctor`;
-  }
+  // update(id: number, updateDoctorDto: UpdateDoctorDto) {
+  //   return `This action updates a #${id}  doctor`;
+  // }
 
   remove(id: number) {
     return `This action removes a #${id} doctor`;

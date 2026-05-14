@@ -9,7 +9,7 @@ export class LoginAuthDto {
 
   @ApiProperty({ example: 'pass123' })
   @IsString()
-  @MinLength(6, { message: 'Minino 6 caracteres' })
+  @MinLength(4, { message: 'Minino 4 caracteres' })
   @IsNotEmpty({ message: 'La contraseña es requerida' })
   password!: string;
 }

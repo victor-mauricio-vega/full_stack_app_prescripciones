@@ -30,10 +30,10 @@ export class DoctorController {
     return this.doctorService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDoctorDto: UpdateDoctorDto) {
-    return this.doctorService.update(+id, updateDoctorDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateDoctorDto: UpdateDoctorDto) {
+  //   return this.doctorService.update(+id, updateDoctorDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

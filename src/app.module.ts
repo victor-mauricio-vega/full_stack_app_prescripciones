@@ -13,9 +13,9 @@ import { PrescriptionsModule } from './prescriptions/prescriptions.module';
       isGlobal: true,
     }),
     PrismaModule,
+    AuthModule,
     AdminModule,
     DoctorModule,
-    AuthModule,
     PrescriptionsModule,
   ],
 })

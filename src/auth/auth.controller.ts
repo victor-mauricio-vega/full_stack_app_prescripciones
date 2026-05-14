@@ -1,29 +1,40 @@
 import {
   Controller,
-  // Get,
   Post,
   Body,
-  // Param,
-  // Delete,
+  Get,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginAuthDto } from './dto/loginAuth.dto';
-import { RegisterDto } from './dto/register.dto';
-import { Public } from './decorators/roles.decorator';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from '@prisma/client';
+import { LoginAuthDto } from './dto/login.dto';
+import { PayloadToken } from './model/payload.model';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
-  @Public()
-  @Post('register')
-  register(@Body() registerDto: RegisterDto) {
-    return this.authService.registerAuth(registerDto);
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  login(@Body() dto: LoginAuthDto) {
+    return this.authService.login(dto);
   }
 
-  @Public()
-  @Post('login')
-  login(@Body() loginDto: LoginAuthDto) {
-    return this.authService.loginAuth(loginDto);
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt-refresh'))
+  refresh(@CurrentUser() payload: PayloadToken) {
+    return this.authService.refresh(payload);
+  }
+
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  profile(@CurrentUser() user: User) {
+    return this.authService.getProfile(user.id);
   }
 }

@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
-import { ROLES_KEY } from '../decorators/roles.decorator';
+import { ROLES } from '../decorators/roles.decorator';
 import { Role } from '../../generated/prisma/client';
 import { PayloadToken } from '../model/payload.model';
 import { Request } from 'express';
@@ -17,7 +17,7 @@ export class RolesGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const roles = this.reflector.get<Role[]>(ROLES_KEY, context.getHandler());
+    const roles = this.reflector.get<Role[]>(ROLES, context.getHandler());
     if (!roles) {
       return true;
     }

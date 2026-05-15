@@ -4,7 +4,9 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { Role } from '@prisma/client';
 import { QueryPrescriptionAdminDto } from './dto/query-prescription-admin.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('access-token')
 @UseGuards(AuthGuard('jwt'))
 @Roles(Role.admin)
 @Controller('admin')

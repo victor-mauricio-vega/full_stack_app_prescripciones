@@ -14,7 +14,9 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from '@prisma/client';
 import { LoginAuthDto } from './dto/login.dto';
 import { PayloadToken } from './model/payload.model';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('access-token')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

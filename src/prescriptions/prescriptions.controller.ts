@@ -18,7 +18,9 @@ import { CreatePrescriptionDto } from './dto/create-prescription.dto';
 import { QueryPrescriptionDto } from './dto/query-prescription.dto';
 import { PdfService } from './pdf/pdf.service';
 import { Response } from 'express';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('access-token')
 @UseGuards(AuthGuard('jwt'))
 @Controller('prescriptions')
 export class PrescriptionsController {

@@ -125,10 +125,11 @@ export default function PatientPrescriptionsPage() {
                       <Badge status={p.status} />
                     </div>
                     <p className="text-sm font-medium text-gray-800">
-                      Dr. {p.author?.user?.name ?? 'Médico'}
+                      Dr. {p.author?.user?.name ?? "Médico"}
                       {p.author?.specialty && (
                         <span className="text-gray-400 font-normal">
-                          {" "}{p.author.specialty}
+                          {" "}
+                          {p.author.specialty}
                         </span>
                       )}
                     </p>
@@ -150,7 +151,7 @@ export default function PatientPrescriptionsPage() {
                   {/* Acciones */}
                   <div className="flex flex-col gap-2 shrink-0">
                     <Link
-                      href={`/patient/prescriptions/${p.id}`}
+                      href={`patients/prescriptions/${p.id}`}
                       className="flex items-center gap-1.5 text-xs border border-gray-200
                                  rounded-lg px-3 py-1.5 hover:bg-gray-50 transition text-gray-600"
                     >

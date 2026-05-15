@@ -5,7 +5,6 @@ import { Response } from 'express';
 
 import * as QRCode from 'qrcode';
 import PDFDocument from 'pdfkit';
-import { Prescription, PrescriptionItem } from '@prisma/client';
 
 @Injectable()
 export class PdfService {

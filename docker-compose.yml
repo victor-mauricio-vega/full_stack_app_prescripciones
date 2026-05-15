@@ -1,0 +1,61 @@
+services:
+
+  # PostgreSQL 
+  postgres:
+    image: postgres:16-alpine
+    container_name: mediprescribe_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-prescriptions_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data   # volumen persistente
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend NestJS 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mediprescribe_api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-prescriptions_db}?schema=public
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-super_secret_access_key}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-super_secret_refresh_key}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-900s}
+      JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-7d}
+      APP_ORIGIN: ${APP_ORIGIN:-http://localhost:3001}
+      PORT: 3000
+    depends_on:
+      postgres:
+        condition: service_healthy   # espera a que postgres esté listo
+
+  # Frontend Next.js 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mediprescribe_front
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:3000}
+      PORT: 3001
+    depends_on:
+      - backend
+
+# Volumen persistente de PostgreSQL 
+volumes:
+  postgres_data:
+    driver: local

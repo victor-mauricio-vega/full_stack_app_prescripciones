@@ -43,7 +43,7 @@ export default function PatientPrescriptionsPage() {
   }, [filters]);
 
   useEffect(() => {
-    fetchData();
+      fetchData();
   }, [fetchData]);
 
   const handleConsume = async (id: string) => {

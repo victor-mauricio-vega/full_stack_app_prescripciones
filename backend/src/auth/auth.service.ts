@@ -20,6 +20,10 @@ export class AuthService {
 
       const user = await this.prisma.user.findUnique({
         where: { email },
+        include: {
+          doctor: { select: { id: true, specialty: true } },
+          patient: { select: { id: true, birthDate: true } },
+        },
       });
 
       if (!user) {

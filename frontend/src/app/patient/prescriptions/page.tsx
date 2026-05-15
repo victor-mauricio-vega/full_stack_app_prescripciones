@@ -125,11 +125,10 @@ export default function PatientPrescriptionsPage() {
                       <Badge status={p.status} />
                     </div>
                     <p className="text-sm font-medium text-gray-800">
-                      Dr. {p.author.user.name}
-                      {p.author.specialty && (
+                      Dr. {p.author?.user?.name ?? 'Médico'}
+                      {p.author?.specialty && (
                         <span className="text-gray-400 font-normal">
-                          {" "}
-                          · {p.author.specialty}
+                          {" "}{p.author.specialty}
                         </span>
                       )}
                     </p>

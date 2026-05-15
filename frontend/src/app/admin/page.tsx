@@ -10,6 +10,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  Cell,
 } from "recharts";
 import api from "@/src/lib/axios";
 import { getErrorMessage } from "@/src/lib/utils";

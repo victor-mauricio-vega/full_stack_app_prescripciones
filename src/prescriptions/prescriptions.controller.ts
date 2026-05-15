@@ -6,6 +6,7 @@ import {
   Post,
   Put,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { PrescriptionsService } from './prescriptions.service';
@@ -15,11 +16,16 @@ import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { CreatePrescriptionDto } from './dto/create-prescription.dto';
 import { QueryPrescriptionDto } from './dto/query-prescription.dto';
+import { PdfService } from './pdf/pdf.service';
+import { Response } from 'express';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('prescriptions')
 export class PrescriptionsController {
-  constructor(private readonly prescriptionService: PrescriptionsService) {}
+  constructor(
+    private readonly prescriptionService: PrescriptionsService,
+    private readonly pdfService: PdfService,
+  ) {}
 
   @Post()
   @Roles(Role.doctor)
@@ -51,5 +57,16 @@ export class PrescriptionsController {
   @Roles(Role.patient)
   consume(@Param('id') id: string, @CurrentUser() user: User) {
     return this.prescriptionService.consume(id, user);
+  }
+
+  @Get(':id/pdf')
+  @Roles(Role.patient, Role.doctor, Role.admin)
+  async downloadPdf(
+    @Param('id') id: string,
+    @CurrentUser() user: User,
+    @Res() res: Response,
+  ) {
+    await this.prescriptionService.findOne(id, user);
+    return this.pdfService.generatePrescriptionPdf(id, res);
   }
 }

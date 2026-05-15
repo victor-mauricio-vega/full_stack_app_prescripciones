@@ -38,6 +38,23 @@ export default function Navbar() {
           <Stethoscope size={18} />
           <span className="font-bold text-gray-900">MediPrescribe</span>
         </div>
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <p className="text-sm font-medium text-gray-900">{user.name}</p>
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full font-medium ${ROLE_COLORS[user.role]}`}
+            >
+              {ROLE_LABELS[user.role]}
+            </span>
+          </div>
+          <button
+            onClick={logout}
+            className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition"
+            title="Cerrar sesión"
+          >
+            <LogOut size={18} />
+          </button>
+        </div>
       </div>
     </header>
   );

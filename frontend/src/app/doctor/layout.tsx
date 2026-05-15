@@ -8,7 +8,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { isReady } = useRequireAuth("admin");
+  const { isReady } = useRequireAuth("doctor");
 
   if (!isReady)
     return (

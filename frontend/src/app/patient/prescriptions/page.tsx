@@ -151,11 +151,12 @@ export default function PatientPrescriptionsPage() {
                   {/* Acciones */}
                   <div className="flex flex-col gap-2 shrink-0">
                     <Link
-                      href={`patients/prescriptions/${p.id}`}
+                      href={`prescriptions/${p.id}`}
                       className="flex items-center gap-1.5 text-xs border border-gray-200
-                                 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition text-gray-600"
+                        rounded-lg px-3 py-1.5 hover:bg-gray-50 transition text-gray-600"
                     >
-                      <Eye size={13} /> Ver
+                      <Eye size={13} /> 
+                      Ver
                     </Link>
                     <button
                       onClick={() => handleDownload(p.id, p.code)}

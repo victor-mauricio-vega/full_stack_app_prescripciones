@@ -17,7 +17,7 @@ export default function PatientPrescriptionDetailPage() {
 
   useEffect(() => {
     api
-      .get(`/prescriptions/${id}`)
+      .get(`prescriptions/${id}`)
       .then(({ data }) => setData(data))
       .catch((err) => {
         toast.error(getErrorMessage(err));

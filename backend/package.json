@@ -18,8 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "seed": "pnpm --filter backend prisma db seed",
+    "generate": "pnpm --filter backend prisma generate",
+    "migrate": "pnpm --filter backend prisma migrate dev"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -38,6 +39,7 @@
     "helmet": "^8.1.0",
     "passport-jwt": "^4.0.1",
     "pdfkit": "^0.18.0",
+    "qrcode": "^1.5.4",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
@@ -56,6 +58,7 @@
     "@types/node": "^22.10.7",
     "@types/passport-jwt": "^4.0.1",
     "@types/pdfkit": "^0.17.6",
+    "@types/qrcode": "^1.5.6",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
@@ -91,6 +94,8 @@
     "testEnvironment": "node"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "pnpm --filter backend prisma db seed",
+    "generate": "pnpm --filter backend prisma generate",
+    "migrate": "pnpm --filter backend prisma migrate dev"
   }
 }

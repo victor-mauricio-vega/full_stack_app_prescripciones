@@ -61,7 +61,7 @@ export default function PatientPrescriptionsPage() {
 
   const handleDownload = async (id: string, code: string) => {
     try {
-      const res = await api.get(`/prescriptions/${id}/pdf`, {
+      const res = await api.get(`prescriptions/${id}/pdf`, {
         responseType: "blob",
       });
       const url = window.URL.createObjectURL(new Blob([res.data]));

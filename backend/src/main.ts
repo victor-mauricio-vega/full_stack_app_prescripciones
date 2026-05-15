@@ -16,7 +16,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://172.24.80.1:3000'],
+    origin: [process.env.APP_ORIGIN],
     credentials: true,
   });
 
@@ -49,6 +49,6 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
   await app.listen(port);
   console.log(`servidor corriendo http://localhost:${port}`);
-  console.log(`Swagger docs: http://localhost:${port}/docs`);
+  console.log(`Swagger docs: ${process.env.HOST}`);
 }
 void bootstrap();

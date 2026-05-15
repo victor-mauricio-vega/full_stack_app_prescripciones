@@ -1,0 +1,9 @@
+{
+  "name": "app-prescripciones",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev"
+  }
+}

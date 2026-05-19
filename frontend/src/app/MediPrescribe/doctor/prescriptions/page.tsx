@@ -9,6 +9,7 @@ import { formatDate, getErrorMessage } from "@/src/lib/utils";
 import LoadingSpinner from "@/src/components/ui/LoadingSpinner";
 import EmptyState from "@/src/components/ui/EmptyState";
 import Badge from "@/src/components/ui/Badge";
+import { ROLE_ROUTES } from "@/src/constants/roles";
 
 interface Prescription {
   id: string;
@@ -183,7 +184,7 @@ export default function DoctorPrescriptionsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <Link
-                        href={`/doctor/prescriptions/${p.id}`}
+                        href={`${ROLE_ROUTES.doctor}/${p.id}`}
                         className="text-blue-600 hover:underline text-xs font-medium"
                       >
                         Ver

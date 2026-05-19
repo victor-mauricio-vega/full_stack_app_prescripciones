@@ -22,9 +22,9 @@ export default function Navbar() {
   const { user, clearAuth } = useAuthStore();
 
   const logout = () => {
+    router.replace("/auth/login");
     clearAuth();
     toast.success("Sesión cerrada");
-    router.replace("/login");
   };
 
   if (!user) return null;

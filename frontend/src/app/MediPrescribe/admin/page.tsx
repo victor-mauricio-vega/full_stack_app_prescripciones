@@ -29,24 +29,30 @@ export default function AdminDashboardPage() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
-  const fetchMetrics = async () => {
-    setLoading(true);
-    try {
-      const params: any = {};
-      if (from) params.from = from;
-      if (to) params.to = to;
-      const { data } = await api.get("/admin/metrics", { params });
-      setMetrics(data);
-    } catch (err) {
-      toast.error(getErrorMessage(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchMetrics();
-  }, []);
+    let cancelled = false;
+
+    const load = async () => {
+      setLoading(true);
+      try {
+        const params: Record<string, string> = {};
+        if (from) params.from = from;
+        if (to) params.to = to;
+        const { data } = await api.get("/admin/metrics", { params });
+        if (!cancelled) setMetrics(data);
+      } catch (err: unknown) {
+        if (!cancelled) toast.error(getErrorMessage(err));
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [from, to]);
 
   if (loading) return <LoadingSpinner />;
   if (!metrics) return null;
@@ -78,18 +84,11 @@ export default function AdminDashboardPage() {
             onChange={(e) => setTo(e.target.value)}
             className="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button
-            onClick={fetchMetrics}
-            className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition"
-          >
-            Filtrar
-          </button>
           {(from || to) && (
             <button
               onClick={() => {
                 setFrom("");
                 setTo("");
-                setTimeout(fetchMetrics, 0);
               }}
               className="text-sm text-gray-500 hover:text-gray-700"
             >

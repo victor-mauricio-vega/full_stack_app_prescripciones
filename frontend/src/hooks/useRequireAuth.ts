@@ -2,15 +2,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "../store/auth.store";
-
-
-type Role = "admin" | "doctor" | "patient";
-
-const ROLE_HOME: Record<Role, string> = {
-  admin: "/admin",
-  doctor: "/doctor/prescriptions",
-  patient: "/patient/prescriptions",
-};
+import { Role, ROLE_ROUTES } from "../constants/roles";
 
 export function useRequireAuth(requiredRole?: Role) {
   const router = useRouter();
@@ -22,12 +14,12 @@ export function useRequireAuth(requiredRole?: Role) {
     if (!hydrated) return;
 
     if (!user) {
-      router.replace("/login");
+      router.replace("/auth/login");
       return;
     }
 
     if (requiredRole && user.role !== requiredRole) {
-      router.replace(ROLE_HOME[user.role as Role] ?? "/login");
+      router.replace(ROLE_ROUTES[user.role as Role] ?? "/login");
     }
   }, [hydrated, user]);
 

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-
-const inter = Inter({ subsets: ["latin"] });
+import { inter } from "../config/fonts";
 
 export const metadata: Metadata = {
   title: "Sistema de Prescripciones",

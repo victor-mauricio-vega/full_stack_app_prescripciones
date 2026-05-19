@@ -5,12 +5,8 @@ import toast from "react-hot-toast";
 import { Loader2, Stethoscope } from "lucide-react";
 import { useAuthStore } from "@/src/store/auth.store";
 import api from "@/src/lib/axios";
-
-const ROLE_ROUTES: Record<string, string> = {
-  doctor: "/doctor/prescriptions",
-  patient: "/patient/prescriptions",
-  admin: "/admin",
-};
+import { Role, ROLE_ROUTES } from "@/src/constants/roles";
+import { getErrorMessage } from "@/src/lib/utils";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -40,9 +36,9 @@ export default function LoginPage() {
       setAuth(data.user, data.accessToken, data.refreshToken);
 
       toast.success(`Bienvenido, ${data.user.name}`);
-      router.push(ROLE_ROUTES[data.user.role]);
-    } catch (err: any) {
-      toast.error(err.response?.data?.message ?? "Error al iniciar sesión");
+      router.push(ROLE_ROUTES[data.user.role as Role]);
+    } catch (err: unknown) {
+     toast.error(getErrorMessage(err, "Error al iniciar sesión"));
       // Solo libera el bloqueo si hay error para poder reintentar
       submitting.current = false;
       setLoading(false);
@@ -50,7 +46,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 px-4">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-8">
         <div className="flex flex-col items-center mb-8">
           <div className="bg-blue-600 text-white rounded-full p-3 mb-3">
